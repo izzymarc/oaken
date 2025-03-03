@@ -1,3 +1,4 @@
+import { useState } from 'react'; // Added useState import
 import { useAuth } from "@/hooks/use-auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,6 +36,47 @@ export default function AuthPage() {
     resolver: zodResolver(insertUserSchema),
   });
 
+  const signIn = async (data: z.infer<typeof loginSchema>) => {
+    setLoading(true);
+    setError("");
+    try {
+      await fetch("/.netlify/functions/login", { // Updated API endpoint
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      loginMutation.mutate(data); // Still call mutation for local state update
+    } catch (error: any) {
+      setError("Login failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const register = async (data: z.infer<typeof insertUserSchema>) => {
+    setLoading(true);
+    setError("");
+    try {
+      await fetch("/.netlify/functions/register", { // Updated API endpoint
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      registerMutation.mutate(data); // Still call mutation for local state update
+    } catch (error: any) {
+      setError("Registration failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
   if (user) {
     return <Redirect to="/" />;
   }
@@ -52,7 +94,7 @@ export default function AuthPage() {
 
               <TabsContent value="login">
                 <Form {...loginForm}>
-                  <form onSubmit={loginForm.handleSubmit((data) => loginMutation.mutate(data))} className="space-y-4">
+                  <form onSubmit={loginForm.handleSubmit(signIn)} className="space-y-4">
                     <FormField
                       control={loginForm.control}
                       name="username"
@@ -79,16 +121,17 @@ export default function AuthPage() {
                         </FormItem>
                       )}
                     />
-                    <Button type="submit" className="w-full" disabled={loginMutation.isPending}>
+                    <Button type="submit" className="w-full" disabled={loading || loginMutation.isPending}>
                       Login
                     </Button>
+                    {error && <p className="text-red-500 text-sm">{error}</p>}
                   </form>
                 </Form>
               </TabsContent>
 
               <TabsContent value="register">
                 <Form {...registerForm}>
-                  <form onSubmit={registerForm.handleSubmit((data) => registerMutation.mutate(data))} className="space-y-4">
+                  <form onSubmit={registerForm.handleSubmit(register)} className="space-y-4">
                     <FormField
                       control={registerForm.control}
                       name="username"
@@ -156,15 +199,19 @@ export default function AuthPage() {
                         <FormItem>
                           <FormLabel>Bio</FormLabel>
                           <FormControl>
-                            <Textarea {...field} />
+                            <Textarea 
+                              {...field} 
+                              value={field.value || ""} 
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
-                    <Button type="submit" className="w-full" disabled={registerMutation.isPending}>
+                    <Button type="submit" className="w-full" disabled={loading || registerMutation.isPending}>
                       Register
                     </Button>
+                    {error && <p className="text-red-500 text-sm">{error}</p>}
                   </form>
                 </Form>
               </TabsContent>

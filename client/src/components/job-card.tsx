@@ -31,8 +31,8 @@ export function JobCard({ job, onApply }: JobCardProps) {
           <div className="space-y-2">
             <p className="text-sm text-muted-foreground">{job.description}</p>
             <div className="flex justify-between text-sm">
-              <span>Budget: ${job.budget}</span>
-              <span>{job.location}</span>
+              <span className="text-sm text-gray-500">Budget: ${job.budget}</span>
+              <span className="text-sm text-gray-500">Location: {job.location}</span>
             </div>
             <div className="text-sm text-muted-foreground">
               Posted {formatDistance(new Date(job.createdAt || new Date()), new Date(), { addSuffix: true })}

@@ -27,7 +27,7 @@ export default function MarketplacePage() {
   const [remoteOnly, setRemoteOnly] = useState(false);
 
   const { data: jobs, isLoading } = useQuery<Job[]>({
-    queryKey: ["/api/jobs"],
+    queryKey: ["/.netlify/functions/jobs"],
   });
 
   // Since we don't have a category field in the Job type,
