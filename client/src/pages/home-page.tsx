@@ -5,6 +5,7 @@ import { ArrowRight, Calendar, DollarSign, Users, CheckCircle, Star } from "luci
 import { ConferenceBanner } from "@/components/conference/conference-banner";
 import { ConferenceHighlights } from "@/components/conference/conference-highlights";
 import { IndustryMentorsCarousel } from "@/components/homepage/industry-mentors-carousel";
+import { ImageCarousel } from "@/components/ui/image-carousel"; // Added ImageCarousel import
 
 const stats = [
   { number: "1,000+", label: "Event Professionals" },
@@ -57,48 +58,56 @@ export default function HomePage() {
     <div className="flex flex-col min-h-screen">
       <main className="flex-1">
         {/* Hero Section */}
-        <motion.section 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gradient-to-b from-white to-slate-50"
-        >
+        {/* Hero Section with Image Carousel */}
+        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48">
           <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center space-y-8 text-center">
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="space-y-4"
-              >
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
-                  Find the Perfect Event Professional
-                </h1>
-                <p className="mx-auto max-w-[700px] text-gray-600 md:text-xl text-justify">
-                  Connect with talented event professionals or find your next event gig. 
-                  Start exploring the marketplace today.
-                </p>
-              </motion.div>
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.4 }}
-                className="space-x-4"
-              >
-                <Link href="/marketplace">
-                  <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
-                    Browse Jobs <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-                <Link href="/auth">
-                  <Button variant="outline" size="lg">
-                    Start Hiring <Users className="ml-2 h-4 w-4" />
-                  </Button>
-                </Link>
-              </motion.div>
+            <div className="relative">
+              <ImageCarousel 
+                images={[
+                  { src: "/images/hero-backgrounds/hero-bg1.jpg", alt: "Hero Background 1" },
+                  { src: "/images/hero-backgrounds/hero-bg2.jpg", alt: "Hero Background 2" },
+                  { src: "/images/hero-backgrounds/hero-bg3.jpg", alt: "Hero Background 3" },
+                ]}
+                autoPlayInterval={5000}
+                fill={true}
+                className="absolute inset-0 h-full w-full -z-10"
+              />
+              <div className="flex flex-col items-center space-y-8 text-center relative">
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="space-y-4"
+                >
+                  <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
+                    Find the Perfect Event Professional
+                  </h1>
+                  <p className="mx-auto max-w-[700px] text-gray-600 md:text-xl text-justify">
+                    Connect with talented event professionals or find your next event gig. 
+                    Start exploring the marketplace today.
+                  </p>
+                </motion.div>
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                  className="space-x-4"
+                >
+                  <Link href="/marketplace">
+                    <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+                      Browse Jobs <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+                  <Link href="/auth">
+                    <Button variant="outline" size="lg">
+                      Start Hiring <Users className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+                </motion.div>
+              </div>
             </div>
           </div>
-        </motion.section>
+        </section>
 
         {/* Stats Section */}
         <section className="w-full py-12 bg-white">
