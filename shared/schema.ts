@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp, json } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, json, foreignKey } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -35,6 +35,16 @@ export const messages = pgTable("messages", {
   createdAt: timestamp("created_at").defaultNow()
 });
 
+export const applications = pgTable("applications", {
+  id: serial("id").primaryKey(),
+  jobId: integer("job_id").notNull().references(() => jobs.id),
+  professionalId: integer("professional_id").notNull().references(() => users.id),
+  proposalText: text("proposal_text").notNull(),
+  status: text("status").default("pending").notNull(), // 'pending', 'accepted', 'rejected'
+  createdAt: timestamp("created_at").defaultNow()
+});
+
+
 // Updated schema with proper date validation
 export const insertJobSchema = createInsertSchema(jobs)
   .pick({
@@ -68,9 +78,19 @@ export const insertMessageSchema = createInsertSchema(messages).pick({
   content: true
 });
 
+export const insertApplicationSchema = createInsertSchema(applications).pick({
+  jobId: true,
+  professionalId: true,
+  proposalText: true,
+  status: true
+});
+
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type InsertJob = z.infer<typeof insertJobSchema>;
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
+export type InsertApplication = z.infer<typeof insertApplicationSchema>;
 export type User = typeof users.$inferSelect;
 export type Job = typeof jobs.$inferSelect;
 export type Message = typeof messages.$inferSelect;
+export type Application = typeof applications.$inferSelect;
