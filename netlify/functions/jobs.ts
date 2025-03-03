@@ -126,10 +126,10 @@ export const storage = {
   async getUser(username: string) {
     return await db.select().from(usersTable).where(eq(usersTable.username, username)))[0];
   },
-  async createUser(user: schema.InsertUser) {
-    return (await db.insert(usersTable).values(user).returning())[0];
-  },
-};
+    async createUser(user: schema.InsertUser) {
+      return (await db.insert(usersTable).values(user).returning())[0];
+    }
+  };
 
 exports.handler = async function (event: any, context: any) {
   console.log("Jobs function invoked");
